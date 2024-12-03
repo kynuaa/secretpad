@@ -34,7 +34,7 @@ secretpad-api/client-java-kusciaapi/**/common/
 secretpad-api/client-java-kusciaapi/**/serving/
 secretpad-service/**/org/secretflow/proto/
 secretpad-service/**/com/secretflow/spec/v1/
-secretpad-web/config
+#secretpad-web/config
 
 ### VS Code ###
 .vscode/
