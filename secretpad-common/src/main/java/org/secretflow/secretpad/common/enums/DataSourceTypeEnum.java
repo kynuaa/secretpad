@@ -28,6 +28,7 @@ public enum DataSourceTypeEnum {
     LOCAL(true),
     MYSQL(true),
     ODPS(true),
+    DATABASE(true)
     ;
 
     /**
@@ -44,8 +45,9 @@ public enum DataSourceTypeEnum {
         return switch (str.toLowerCase(Locale.ROOT)) {
             case "localfs" -> LOCAL;
             case "oss" -> OSS;
-            case "mysql" -> MYSQL;
+//            case "mysql" -> MYSQL;
             case "odps" -> ODPS;
+            case "database" -> DATABASE;
             default -> throw new IllegalArgumentException("Invalidate DataSource type: " + str);
         };
     }

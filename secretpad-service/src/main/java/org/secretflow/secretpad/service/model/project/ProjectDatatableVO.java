@@ -46,8 +46,13 @@ public class ProjectDatatableVO extends ProjectDatatableBaseVO {
      * @param datatableName target datatableName
      * @param configs       datatable column config list
      */
-    public ProjectDatatableVO(String datatableId, String datatableName, List<TableColumnConfigVO> configs) {
-        super(datatableId, datatableName, null);
+    public ProjectDatatableVO(String datatableId, String datatableName,List<TableColumnConfigVO> configs) {
+        super(datatableId, datatableName, "",null);
+        this.setConfigs(configs);
+    }
+
+    public ProjectDatatableVO(String datatableId, String datatableName,String datatableType, List<TableColumnConfigVO> configs) {
+        super(datatableId, datatableName, datatableType,null);
         this.setConfigs(configs);
     }
 }

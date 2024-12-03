@@ -126,20 +126,40 @@ public class DataManager extends AbstractDataManager {
         description = description == null ? "" : description;
         String nullstrJson = CollectionUtils.isEmpty(nullStrs) ? JsonUtils.toJSONString(new ArrayList<>()) : JsonUtils.toJSONString(nullStrs);
 
-        Domaindata.CreateDomainDataRequest createDomainDataRequest =
-                Domaindata.CreateDomainDataRequest.newBuilder()
-                        .setDomaindataId(domainDataId)
-                        .setDomainId(domainId).setName(name).setType("table")
-                        .setFileFormat(Common.FileFormat.CSV)
-                        .putAttributes("DatasourceType", datasourceType)
-                        .putAttributes("DatasourceName", datasourceName)
-                        .putAttributes(DomainDataConstants.NULL_STRS, nullstrJson)
-                        .setDatasourceId(datasourceId).setRelativeUri(tablePath).putAttributes("description", description)
-                        .addAllColumns(datatableSchemaList
-                                .stream().map(it -> Common.DataColumn.newBuilder().setName(it.getFeatureName())
-                                        .setType(it.getFeatureType()).setComment(it.getFeatureDescription()).build())
-                                .collect(Collectors.toList()))
-                        .build();
+        Domaindata.CreateDomainDataRequest createDomainDataRequest;
+        if(datasourceType.equals("MYSQL")){
+            createDomainDataRequest =
+            Domaindata.CreateDomainDataRequest.newBuilder()
+                    .setDomaindataId(domainDataId)
+                    .setDomainId(domainId).setName(name).setType("table")
+                    .setFileFormat(Common.FileFormat.UNKNOWN)
+                    .putAttributes("DatasourceType", datasourceType)
+                    .putAttributes("DatasourceName", datasourceName)
+                    .putAttributes("Sql", tablePath)
+                    .putAttributes(DomainDataConstants.NULL_STRS, nullstrJson)
+                    .setDatasourceId(datasourceId).setRelativeUri(" ").putAttributes("description", description)
+                    .addAllColumns(datatableSchemaList
+                            .stream().map(it -> Common.DataColumn.newBuilder().setName(it.getFeatureName())
+                                    .setType(it.getFeatureType()).setComment(it.getFeatureDescription()).build())
+                            .collect(Collectors.toList()))
+                    .build();
+        }else{
+            createDomainDataRequest =
+                    Domaindata.CreateDomainDataRequest.newBuilder()
+                            .setDomaindataId(domainDataId)
+                            .setDomainId(domainId).setName(name).setType("table")
+                            .setFileFormat(Common.FileFormat.CSV)
+                    .putAttributes("DatasourceType", datasourceType)
+                    .putAttributes("DatasourceName", datasourceName)
+                    .putAttributes(DomainDataConstants.NULL_STRS, nullstrJson)
+                    .setDatasourceId(datasourceId).setRelativeUri(tablePath).putAttributes("description", description)
+                    .addAllColumns(datatableSchemaList
+                            .stream().map(it -> Common.DataColumn.newBuilder().setName(it.getFeatureName())
+                                    .setType(it.getFeatureType()).setComment(it.getFeatureDescription()).build())
+                            .collect(Collectors.toList()))
+                    .build();
+        }
+
         if (partition != null) {
             createDomainDataRequest = createDomainDataRequest.toBuilder().setPartition(partition).build();
         }

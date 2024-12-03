@@ -44,5 +44,11 @@ public class ProjectDatatableBaseVO {
     @Schema(description = "datatable name")
     private String datatableName;
 
+    /**
+     * Datatable id
+     */
+    @Schema(description = "datatable type")
+    private String datatableType;
+
     private OdpsPartitionParam partition;
 }

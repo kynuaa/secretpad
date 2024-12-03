@@ -38,6 +38,7 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.secretflow.v1alpha1.kusciaapi.Domaindatasource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -81,7 +82,7 @@ public class DatasourceServiceImpl implements DatasourceService {
     @NotNull
     private static List<DataSourceTypeEnum> filterKusciaType(List<String> searchTypes) {
         if (CollectionUtils.isEmpty(searchTypes)) {
-            return Lists.newArrayList(DataSourceTypeEnum.OSS, DataSourceTypeEnum.HTTP, DataSourceTypeEnum.ODPS);
+            return Lists.newArrayList(DataSourceTypeEnum.OSS, DataSourceTypeEnum.HTTP, DataSourceTypeEnum.ODPS,DataSourceTypeEnum.DATABASE);
         }
         return searchTypes.stream()
                 .map(DataSourceTypeEnum::valueOf)
@@ -162,6 +163,9 @@ public class DatasourceServiceImpl implements DatasourceService {
 
     @Override
     public DatasourceListVO listDatasource(DatasourceListRequest datasourceListRequest) {
+        if(datasourceListRequest.getTypes().contains("DATABASE")){
+            datasourceListRequest.getTypes().add("MYSQL");
+        }
         List<DatasourceListInfoUnAggregate> datasourceListInfoUnAggregates = new ArrayList<>();
         List<NodeDO> nodeDOS = nodeRepository.findByInstId(datasourceListRequest.getOwnerId());
         Map<String, String> nodeMap = nodeDOS.stream().collect(Collectors.toMap(NodeDO::getNodeId, NodeDO::getName));
@@ -261,6 +265,9 @@ public class DatasourceServiceImpl implements DatasourceService {
         List<DatasourceListInfoUnAggregate> datasourceListInfoUnAggregates = new ArrayList<>();
         List<DataSourceTypeEnum> expectTypes = filterKusciaType(request.getTypes());
         for (DataSourceTypeEnum searchType : expectTypes) {
+            if(searchType.equals(DataSourceTypeEnum.MYSQL)){
+                searchType = DataSourceTypeEnum.DATABASE;
+            }
             List<DatasourceListInfoUnAggregate> datasourceList = datasourceHandlerMap.get(searchType).listDatasource(request.getOwnerId());
             datasourceListInfoUnAggregates.addAll(datasourceList);
         }

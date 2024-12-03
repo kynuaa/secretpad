@@ -497,7 +497,7 @@ public class DatatableServiceImpl implements DatatableService {
                 domainDataId,
                 createDatatableRequest.getOwnerId(),
                 createDatatableRequest.getDatatableName(),
-                createDatatableRequest.getRelativeUri(),
+                createDatatableRequest.getDatasourceType().equals("MYSQL")?createDatatableRequest.getSql():createDatatableRequest.getRelativeUri(),
                 createDatatableRequest.getDatasourceId(),
                 createDatatableRequest.getDesc(),
                 createDatatableRequest.getDatasourceType(),
@@ -507,7 +507,7 @@ public class DatatableServiceImpl implements DatatableService {
                     DatatableSchema schema = new DatatableSchema();
                     schema.setFeatureName(column.getColName());
                     schema.setFeatureType(column.getColType());
-                    schema.setFeatureDescription(column.getColComment());
+                    schema.setFeatureDescription(StringUtils.isNotEmpty(column.getColComment()) ? column.getColComment() : "");
                     return schema;
                 }).collect(Collectors.toList()),
                 ObjectUtils.isEmpty(createDatatableRequest.getPartition()) ? null : createDatatableRequest.getPartition().toPartition()

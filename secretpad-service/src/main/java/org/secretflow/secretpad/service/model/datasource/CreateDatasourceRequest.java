@@ -46,7 +46,7 @@ public class CreateDatasourceRequest {
     private List<String> nodeIds;
 
     @NotBlank(message = "type cannot be blank")
-    @OneOfType(types = {DomainDatasourceConstants.DEFAULT_OSS_DATASOURCE_TYPE, DomainDatasourceConstants.DEFAULT_ODPS_DATASOURCE_TYPE})
+    @OneOfType(types = {DomainDatasourceConstants.DEFAULT_OSS_DATASOURCE_TYPE, DomainDatasourceConstants.DEFAULT_ODPS_DATASOURCE_TYPE,DomainDatasourceConstants.DEFAULT_DATABASE_DATASOURCE_TYPE})
     private String type;
 
     @NotBlank(message = "name can not be empty")
@@ -58,11 +58,12 @@ public class CreateDatasourceRequest {
             use = JsonTypeInfo.Id.NAME,
             include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type",
-            defaultImpl = OssDatasourceInfo.class
+            defaultImpl = DatabaseDatasourceInfo.class
     )
     @JsonSubTypes({
             @JsonSubTypes.Type(value = OssDatasourceInfo.class, name = DomainDatasourceConstants.DEFAULT_OSS_DATASOURCE_TYPE),
-            @JsonSubTypes.Type(value = OdpsDatasourceInfo.class, name = DomainDatasourceConstants.DEFAULT_ODPS_DATASOURCE_TYPE)
+            @JsonSubTypes.Type(value = OdpsDatasourceInfo.class, name = DomainDatasourceConstants.DEFAULT_ODPS_DATASOURCE_TYPE),
+            @JsonSubTypes.Type(value = DatabaseDatasourceInfo.class, name = DomainDatasourceConstants.DEFAULT_DATABASE_DATASOURCE_TYPE)
     })
     private @Valid DataSourceInfo dataSourceInfo;
 }

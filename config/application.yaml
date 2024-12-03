@@ -144,7 +144,7 @@ job:
 
 secretpad:
   logs:
-    path: ${SECRETPAD_LOG_PATH:/app/log}
+    path: ${SECRETPAD_LOG_PATH:/Users/ky/Code/secretpad/log}
   deploy-mode: ${DEPLOY_MODE:ALL-IN-ONE} # MPC TEE ALL-IN-ONE
   platform-type: CENTER
   node-id: kuscia-system
@@ -166,10 +166,10 @@ secretpad:
     center: true
     p2p: false
   version:
-    secretpad-image: ${SECRETPAD_IMAGE:0.5.0b0}
-    kuscia-image: ${KUSCIA_IMAGE:0.6.0b0}
-    secretflow-image: ${SECRETFLOW_IMAGE:1.4.0b0}
-    secretflow-serving-image: ${SECRETFLOW_SERVING_IMAGE:0.2.0b0}
+    secretpad-image: ${SECRETPAD_IMAGE:0.10.1b0}
+    kuscia-image: ${KUSCIA_IMAGE:0.11.0b0}
+    secretflow-image: ${SECRETFLOW_IMAGE:1.9.0b2}
+    secretflow-serving-image: ${SECRETFLOW_SERVING_IMAGE:0.6.0b0}
     tee-app-image: ${TEE_APP_IMAGE:0.1.0b0}
     tee-dm-image: ${TEE_DM_IMAGE:0.1.0b0}
     capsule-manager-sim-image: ${CAPSULE_MANAGER_SIM_IMAGE:0.1.2b0}
