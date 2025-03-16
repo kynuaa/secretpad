@@ -16,12 +16,12 @@
 
 package org.secretflow.secretpad.persistence.repository;
 
-import org.secretflow.secretpad.common.enums.ScheduledStatus;
 import org.secretflow.secretpad.persistence.entity.ProjectScheduleDO;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author yutu
@@ -32,6 +32,7 @@ public interface ProjectScheduleRepository extends BaseRepository<ProjectSchedul
 
 
     @Modifying
-    @Query("update ProjectScheduleDO set status = ?2 where scheduleId = ?1")
-    void updateStatusByScheduleId(String scheduleId, ScheduledStatus status);
+    @Transactional
+    @Query(value = "update project_schedule set status = :status where schedule_id = :scheduleId and is_deleted = 0", nativeQuery = true)
+    void updateStatusByScheduleId(String scheduleId, String status);
 }

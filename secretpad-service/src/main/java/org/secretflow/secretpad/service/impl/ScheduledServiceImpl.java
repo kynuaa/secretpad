@@ -280,7 +280,7 @@ public class ScheduledServiceImpl implements ScheduledService {
         }
         checkOwner(projectScheduleDO.getOwner());
         secretpadScheduledService.pauseScheduler(request.getScheduleId());
-        projectScheduleRepository.updateStatusByScheduleId(request.getScheduleId(), ScheduledStatus.DOWN);
+        projectScheduleRepository.updateStatusByScheduleId(request.getScheduleId(), ScheduledStatus.DOWN.name());
     }
 
     @Override
@@ -311,7 +311,9 @@ public class ScheduledServiceImpl implements ScheduledService {
                 .edges(CollectionUtils.isEmpty(job.getEdges()) ? Collections.emptyList() : job.getEdges().stream().map(GraphEdge::fromDO).collect(Collectors.toList()))
                 .nodes(CollectionUtils.isEmpty(job.getTasks()) ? Collections.emptyList() : job.getTasks().values().stream().map(it -> GraphNodeDetail.fromDO(
                                         it.getGraphNode(), it.getStatus(), taskResults.get(it.getUpk().getTaskId()))
-                                .withJobTask(it.getUpk().getJobId(), it.getUpk().getTaskId()).withJobParties(getParties(it.getParties(), nodeRepository)))
+                                .withJobTask(it.getUpk().getJobId(), it.getUpk().getTaskId())
+                                .withJobParties(getParties(it.getParties(), nodeRepository))
+                                .withTaskProgress(it.getExtraInfo().getProgress()))
                         .collect(Collectors.toList()))
                 .build();
         return ProjectJobVO.from(job, detailVO);
@@ -345,7 +347,7 @@ public class ScheduledServiceImpl implements ScheduledService {
             job.stop();
             projectScheduleJobRepository.save(job);
             kusciaGrpcClientAdapter.stopJob(Job.StopJobRequest.newBuilder().setJobId(job.getUpk().getJobId()).build());
-            projectScheduleTaskRepository.updateStatus(request.getScheduleTaskId(), ScheduledStatus.STOPPING);
+            projectScheduleTaskRepository.updateStatus(request.getScheduleTaskId(), ScheduledStatus.STOPPING.name());
         } else {
             log.error("taskStop, schedule task status is not running, scheduleTaskId:{}", projectScheduleTaskDO.getScheduleTaskId());
             throw SecretpadException.of(ScheduledErrorCode.SCHEDULE_TASK_STATUS_NOT_RUNNING, projectScheduleTaskDO.getStatus().name());
@@ -451,7 +453,9 @@ public class ScheduledServiceImpl implements ScheduledService {
                 .edges(CollectionUtils.isEmpty(job.getEdges()) ? Collections.emptyList() : job.getEdges().stream().map(GraphEdge::fromDO).collect(Collectors.toList()))
                 .nodes(CollectionUtils.isEmpty(job.getTasks()) ? Collections.emptyList() : job.getTasks().values().stream().map(it -> GraphNodeDetail.fromDO(
                                         it.getGraphNode(), it.getStatus(), taskResults.get(it.getUpk().getTaskId()))
-                                .withJobTask(it.getUpk().getJobId(), it.getUpk().getTaskId()).withJobParties(getParties(it.getParties(), nodeRepository)))
+                                .withJobTask(it.getUpk().getJobId(), it.getUpk().getTaskId())
+                                .withJobParties(getParties(it.getParties(), nodeRepository))
+                                .withTaskProgress(it.getExtraInfo().getProgress()))
                         .collect(Collectors.toList()))
                 .build();
         return ProjectJobVO.from(job, detailVO);
